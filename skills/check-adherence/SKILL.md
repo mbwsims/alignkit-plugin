@@ -30,8 +30,20 @@ no cost.
 Call the `alignkit_check` tool. Pass the `file` argument if the user specified one; otherwise
 omit it for auto-discovery. Optionally pass `since_days` to narrow the analysis window.
 
-If no sessions or history exist, explain that adherence tracking builds over time as the user
-works with Claude Code. Suggest checking back after several sessions.
+**If `alignkit_check` is unavailable** (MCP server not running or alignkit not installed),
+explain clearly:
+
+> Adherence tracking requires the alignkit npm package, which reads and analyzes Claude Code
+> session history. Install it with `npm install -g alignkit`, then run `/check` again.
+>
+> In the meantime, `/lint` works without alignkit and can analyze your instruction quality.
+
+Do not attempt to replicate adherence tracking manually — it requires parsing session JSONL
+files and running verification logic that can't be reliably performed ad-hoc.
+
+If no sessions or history exist (tool is available but returns zero sessions), explain that
+adherence tracking builds over time as the user works with Claude Code. Suggest checking
+back after several sessions.
 
 ### 2. Present the Adherence Overview
 

@@ -38,8 +38,16 @@ omit it for auto-discovery of instruction files.
 If no instruction files are found, explain that the project has no CLAUDE.md or similar
 files and suggest creating one.
 
-If the tool call fails, check that the alignkit MCP server is running. Common causes:
-alignkit not installed (`npm install -g alignkit`), or the file path is invalid.
+**If `alignkit_lint` is unavailable** (MCP server not running or alignkit not installed),
+perform manual analysis instead:
+
+1. Find instruction files using Glob: `**/CLAUDE.md`, `.claude/rules/**/*.md`, etc.
+2. Read each file and parse rules (lines starting with `-` or numbered items under headings)
+3. Collect project context: read `package.json` for dependencies, `tsconfig.json` for config,
+   list top-level directories for structure
+4. Apply the analysis methodology from steps 2-5 below using this manually gathered data
+5. Note to the user: "Running without alignkit — token counts are estimated. Install
+   alignkit (`npm install -g alignkit`) for precise analysis and adherence tracking via `/check`."
 
 ### 2. Present the Issues Summary
 
