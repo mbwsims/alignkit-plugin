@@ -107,6 +107,29 @@ Format discoveries as a numbered list with evidence. Group by category.
 - The suggested rule in quotes (ready to paste into CLAUDE.md)
 - Specific evidence: file paths, line numbers, counts, or grep results
 - Note any exceptions found
+- A value tag: **high**, **medium**, or **low**
+
+**Value filtering — this is critical:**
+
+Before including a convention, ask: "If Claude violated this, would it cause a real problem?"
+
+- **High value**: Violations cause bugs, inconsistency, or architectural damage. Architecture
+  boundaries (components must not import from db), security patterns (auth guards, ownership
+  checks), API contracts (error response shapes), import conventions that affect build/tooling.
+  **Always include these.**
+
+- **Medium value**: Violations cause inconsistency but not breakage. Naming conventions,
+  type organization, export style. Include these but mark as medium.
+
+- **Low value — OMIT THESE**: Patterns Claude would follow anyway from reading existing code
+  (function vs arrow syntax, where props are defined, logging format). Also omit implementation
+  details that describe HOW something was built rather than a rule to follow (e.g., "SSE uses
+  TextEncoder" is an implementation detail, not a convention). Also omit patterns that might
+  be gaps rather than intentional choices (e.g., "no Zod for API inputs" might mean they
+  haven't added it yet, not that it's a convention to avoid it).
+
+**Aim for 8-12 high/medium conventions, not 17+ with filler.** Fewer, stronger rules are
+more valuable than a comprehensive list that dilutes signal.
 
 ### 6. Offer to Apply
 
