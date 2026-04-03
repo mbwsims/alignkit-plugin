@@ -1,0 +1,19 @@
+{
+  "name": "alignkit",
+  "version": "0.1.0",
+  "description": "Instruction intelligence for Claude Code — lint rules, track adherence, and optimize your CLAUDE.md",
+  "author": {
+    "name": "Matt Sims",
+    "url": "https://github.com/mbwsims"
+  },
+  "homepage": "https://github.com/mbwsims/alignkit-plugin",
+  "repository": "https://github.com/mbwsims/alignkit-plugin",
+  "license": "MIT",
+  "keywords": [
+    "claude-md",
+    "instruction-quality",
+    "adherence",
+    "lint",
+    "rules"
+  ]
+}

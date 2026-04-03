@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "alignkit": {
+      "command": "npx",
+      "args": ["-y", "alignkit-mcp"]
+    }
+  }
+}
