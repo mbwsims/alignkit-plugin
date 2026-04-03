@@ -70,7 +70,7 @@ This upgrades `/check` from a point-in-time conformance check to persistent adhe
 | `/check` | Conformance check (does code match rules *now*?) | Adherence tracking (did Claude follow rules *across sessions*?) |
 | Trend data | No | Yes — tracks adherence over time |
 
-Most users won't need the npm package. The plugin is fully functional without it.
+The plugin works out of the box. Install alignkit when you're ready to track adherence across sessions.
 
 ## Components
 
