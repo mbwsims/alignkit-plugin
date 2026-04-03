@@ -16,17 +16,12 @@ argument-hint: "[file]"
 
 # Lint Instructions
 
-Run static analysis on instruction files and provide deep effectiveness analysis. Combines
-alignkit's deterministic analyzers (conflict detection, vague rule detection, token counting,
-placement advice) with contextual reasoning about rule effectiveness, coverage gaps, and
-consolidation opportunities — the full deep analysis that previously required an API key.
+Analyze instruction files for quality issues: vague rules, conflicts, redundancies, ordering
+problems, misplaced rules, weak emphasis, and token budget. Then provide deep effectiveness
+ratings, coverage gap detection, and consolidation suggestions.
 
-## How It Works
-
-The alignkit MCP server parses instruction files into individual rules, runs 10 static
-analyzers, collects project context (dependencies, tsconfig, directory structure), and
-returns structured diagnostic data. Use this data as the foundation for deeper analysis
-that goes beyond what static analysis can detect.
+Works out of the box with no dependencies. If the alignkit npm package is installed, analysis
+is enhanced with precise token counts and exhaustive deterministic static analyzers.
 
 ## Workflow
 

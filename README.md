@@ -1,13 +1,8 @@
 # alignkit plugin for Claude Code
 
-Instruction intelligence for Claude Code. Lint your rules, track whether Claude actually follows them, and get actionable recommendations to improve your CLAUDE.md.
+Instruction intelligence for Claude Code. Lint your rules, check whether your codebase follows them, and get actionable recommendations to improve your CLAUDE.md.
 
-## What it does
-
-- **`/lint`** — Deep analysis of instruction quality: effectiveness ratings, coverage gaps, consolidation suggestions, placement advice. Works out of the box.
-- **`/check`** — See which rules Claude follows across sessions. Evaluates unresolved rules with deep analysis (no API key needed). Requires alignkit.
-- **Auto-lint hook** — Surfaces quality issues when you edit CLAUDE.md or `.claude/rules/`.
-- **instruction-advisor agent** — Full autonomous review combining lint + adherence in one report.
+**Zero dependencies. Works immediately after install.**
 
 ## Install
 
@@ -15,38 +10,46 @@ Instruction intelligence for Claude Code. Lint your rules, track whether Claude 
 claude plugin add github.com/mbwsims/alignkit-plugin
 ```
 
-That's it. `/lint` and the auto-lint hook work immediately.
+## What you get
 
-### Unlock adherence tracking
+- **`/lint`** — Deep instruction quality analysis: vague rules, conflicts, effectiveness ratings, coverage gaps, consolidation suggestions, placement advice (should this rule be a hook? a scoped rule?)
+- **`/check`** — Conformance report: does your codebase actually follow your rules? Checks each rule against the code with specific evidence (file paths, line numbers)
+- **Auto-lint hook** — Surfaces quality issues automatically when you edit CLAUDE.md or `.claude/rules/`
+- **instruction-advisor agent** — Full autonomous review combining lint + check in one report
 
-To use `/check` (the hero feature), install the alignkit npm package:
+All features work out of the box with no setup beyond installing the plugin.
+
+## Optional: session-based adherence tracking
+
+For tracking rule adherence *across sessions over time*, install the [alignkit](https://github.com/mbwsims/alignkit) npm package:
 
 ```bash
 npm install -g alignkit
 ```
 
-This provides an MCP server that reads Claude Code session history and verifies whether your rules are actually being followed. Without it, `/lint` still provides full instruction quality analysis — `/check` is the only feature that requires the package.
+This upgrades `/check` from a point-in-time conformance check to persistent adherence tracking:
+
+| | Without alignkit | With alignkit |
+|---|---|---|
+| `/lint` | Full analysis via Claude's reasoning | Enhanced with precise token counts and 10 static analyzers |
+| `/check` | Conformance check (does the code match rules *right now*?) | Adherence tracking (did Claude follow rules *across sessions*?) |
+| Trend data | No | Yes — "adherence trending down over 12 sessions" |
+| History | No | Persistent — builds automatically across sessions |
+
+Most users won't need the npm package. The plugin is fully functional without it.
 
 ## How it works
 
-**Without alignkit installed:** `/lint` reads your instruction files directly and applies the analysis methodology (vague detection, conflict detection, effectiveness ratings, coverage gaps, consolidation) using Claude's native reasoning. Token counts are estimated.
-
-**With alignkit installed:** The plugin's MCP server (`alignkit-mcp`) gives Claude access to three tools:
-
-- `alignkit_lint` — Parses instruction files, runs 10 static analyzers, returns precise diagnostics and project context
-- `alignkit_check` — Reads Claude Code session history, verifies rules against actions, returns adherence data with unresolved rules for Claude to evaluate
-- `alignkit_status` — Quick adherence pulse with trend
-
-The deep analysis that previously required an Anthropic API key is now performed by Claude directly — at no cost.
+The plugin provides skills, a hook, and an agent that guide Claude through structured instruction analysis. When the alignkit npm package is installed, an MCP server gives Claude access to additional tools for precise static analysis and session history parsing. Without it, Claude applies the same methodology using its native reasoning.
 
 ## Components
 
-| Component | Type | Requires alignkit | Purpose |
-|-----------|------|:-:|---------|
-| `/lint` | Skill | No | Instruction quality analysis with deep effectiveness ratings |
-| `/check` | Skill | Yes | Adherence tracking across sessions |
-| Auto-lint | Hook | No | Surfaces issues on instruction file edits |
-| instruction-advisor | Agent | Partial | Full lint + adherence review (lint works without, check needs alignkit) |
+| Component | Type | Purpose |
+|-----------|------|---------|
+| `/lint` | Skill | Instruction quality analysis with effectiveness ratings |
+| `/check` | Skill | Rule conformance/adherence checking with evidence |
+| Auto-lint | Hook | Surfaces issues on instruction file edits |
+| instruction-advisor | Agent | Comprehensive lint + check review |
 
 ## License
 

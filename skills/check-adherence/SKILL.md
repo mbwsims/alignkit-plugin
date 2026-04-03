@@ -18,10 +18,15 @@ argument-hint: "[file]"
 
 # Check Adherence
 
-Analyze whether instruction rules are actually being followed by checking Claude Code session
-history. Combines alignkit's automated verification engine with deep evaluation of rules that
-can't be auto-verified — providing the full analysis that previously required an API key, at
-no cost.
+Verify whether the project's instruction rules are actually being followed. Works in two modes:
+
+- **Conformance mode** (default, no dependencies): Reads the codebase directly and checks each
+  rule against the current code with specific evidence (file paths, line numbers, grep results).
+  Answers: "Does the code match the rules right now?"
+
+- **Adherence mode** (with alignkit npm package): Analyzes Claude Code session history to track
+  rule compliance across sessions over time, with trend data and persistent history.
+  Answers: "Is Claude following the rules while working?"
 
 ## Workflow
 
