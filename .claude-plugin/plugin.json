@@ -1,7 +1,7 @@
 {
   "name": "alignkit",
   "version": "0.1.0",
-  "description": "Instruction intelligence for coding agents. Discover conventions, lint rules, and verify conformance — zero dependencies.",
+  "description": "Instruction intelligence for Claude Code — lint rules, check conformance, and improve your CLAUDE.md. Zero dependencies.",
   "author": {
     "name": "Matt Sims",
     "url": "https://github.com/mbwsims"
@@ -12,8 +12,6 @@
   "keywords": [
     "claude-md",
     "instruction-quality",
-    "conventions",
-    "discover",
     "adherence",
     "lint",
     "rules"
