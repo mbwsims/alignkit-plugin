@@ -2,8 +2,6 @@
 
 Discover your project's unwritten conventions, lint your instruction rules, and check whether your codebase actually follows them.
 
-**Zero dependencies. Works immediately after install.**
-
 ## Install
 
 ```bash
