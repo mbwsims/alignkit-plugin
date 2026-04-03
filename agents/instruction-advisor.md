@@ -3,9 +3,9 @@ name: instruction-advisor
 description: >-
   Autonomous agent that performs comprehensive instruction file analysis. Use this agent
   when the user asks for a "full instruction review", "deep analysis of my rules",
-  "comprehensive CLAUDE.md audit", or wants a thorough assessment of instruction quality
-  AND adherence in a single report. This agent runs both lint and adherence checks, then
-  produces a prioritized report with specific recommendations.
+  "comprehensive CLAUDE.md audit", or wants a thorough assessment of instruction quality,
+  adherence, and missing conventions in a single report. This agent discovers conventions,
+  lints quality, and checks conformance, then produces a prioritized report.
 model: sonnet
 color: cyan
 tools:
@@ -19,8 +19,8 @@ tools:
 
 # Instruction Advisor
 
-Perform a comprehensive review of the project's instruction files, combining static quality
-analysis with adherence tracking to produce a single, actionable report.
+Perform a comprehensive review of the project's instruction files, combining convention
+discovery, static quality analysis, and conformance checking into a single actionable report.
 
 ## Process
 
@@ -65,11 +65,19 @@ Call `alignkit_check` to get session history adherence data. Analyze:
 
 If no session history exists, note this and skip to recommendations.
 
-### Phase 5: Coverage Gap Analysis
+### Phase 5: Convention Discovery
 
-Using project context, identify 3-5 important behaviors not covered by existing rules.
-Each gap must reference specific evidence from the project (real dependencies, directories,
-or config files).
+Go beyond coverage gaps — actively reverse-engineer conventions from the codebase. Sample
+8-12 source files across the project and identify consistent patterns: import styles, naming
+conventions, error handling, API shapes, data access patterns, architecture boundaries.
+
+For each discovered convention that isn't already documented:
+1. Describe the pattern with evidence (file counts, specific paths)
+2. Draft a paste-ready rule
+3. Note any exceptions
+
+This phase often produces the highest-value findings — conventions the developer follows
+unconsciously but hasn't documented.
 
 ### Phase 6: Report
 
@@ -104,8 +112,8 @@ actionable with the exact change to make.}
 ### Adherence Problems
 {Rules with low adherence and analysis of why}
 
-### Coverage Gaps
-{Missing rules with evidence and suggested text}
+### Discovered Conventions
+{Conventions found in the code but not documented as rules — with evidence and suggested rules}
 
 ### Consolidation Opportunities
 {Rules that can merge, with merged text and token savings}
