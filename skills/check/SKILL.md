@@ -1,5 +1,5 @@
 ---
-name: check-adherence
+name: check
 description: >-
   This skill should be used when the user asks to "check adherence", "check rule adherence",
   "are my rules being followed", "is Claude following my instructions", "how effective is my

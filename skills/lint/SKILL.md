@@ -1,5 +1,5 @@
 ---
-name: lint-instructions
+name: lint
 description: >-
   This skill should be used when the user asks to "lint instructions", "lint my CLAUDE.md",
   "check instruction quality", "review my rules", "analyze my CLAUDE.md", "find issues in my

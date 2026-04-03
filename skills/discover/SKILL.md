@@ -1,5 +1,5 @@
 ---
-name: discover-conventions
+name: discover
 description: >-
   This skill should be used when the user asks to "discover conventions", "find conventions",
   "infer rules from code", "what conventions does my project follow", "reverse engineer my rules",
