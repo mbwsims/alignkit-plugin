@@ -31,15 +31,21 @@ Call the `alignkit_check` tool. Pass the `file` argument if the user specified o
 omit it for auto-discovery. Optionally pass `since_days` to narrow the analysis window.
 
 **If `alignkit_check` is unavailable** (MCP server not running or alignkit not installed),
-explain clearly:
+perform a **conformance check** instead — verify whether the codebase currently complies
+with each rule by reading the code directly:
 
-> Adherence tracking requires the alignkit npm package, which reads and analyzes Claude Code
-> session history. Install it with `npm install -g alignkit`, then run `/check` again.
->
-> In the meantime, `/lint` works without alignkit and can analyze your instruction quality.
+1. Find instruction files using Glob and read the rules
+2. For each rule, search the codebase for evidence of compliance or violation using
+   Read, Glob, and Grep (check file paths, imports, dependencies, config files, etc.)
+3. Present results using the same report format below, but label it "Conformance Report"
+   instead of "Adherence Report"
+4. Note the difference to the user: "This is a point-in-time conformance check against
+   the current codebase. For tracking adherence *across sessions over time*, install
+   alignkit (`npm install -g alignkit`) to unlock full `/check` capabilities."
 
-Do not attempt to replicate adherence tracking manually — it requires parsing session JSONL
-files and running verification logic that can't be reliably performed ad-hoc.
+Conformance checking answers "does the code match the rules right now?" — useful but
+different from session-based adherence tracking, which answers "is Claude following
+the rules while working?"
 
 If no sessions or history exist (tool is available but returns zero sessions), explain that
 adherence tracking builds over time as the user works with Claude Code. Suggest checking
