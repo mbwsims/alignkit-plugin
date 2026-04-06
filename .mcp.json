@@ -1,8 +1,12 @@
 {
   "mcpServers": {
+    "alignkit-local": {
+      "command": "node",
+      "args": ["mcp/alignkit/dist/server.bundle.mjs"]
+    },
     "alignkit": {
       "command": "npx",
-      "args": ["-y", "alignkit-mcp"]
+      "args": ["-y", "alignkit-mcp@0.3.0"]
     }
   }
 }

@@ -1,18 +1,20 @@
 # alignkit plugin for Claude Code
 
+> **Part of Claude Universe.** alignkit is the Navigate system in [Claude Universe](https://github.com/mbwsims/claude-universe-plugin), which combines alignkit with 4 other intelligence systems (testing, security, codebase, temporal) in a single install: `claude plugin add mbwsims/claude-universe`. Install this standalone plugin if you only want instruction intelligence.
+
 Discover your project's unwritten conventions, lint your instruction rules, and check whether your codebase actually follows them.
 
 ## Install
 
 ```bash
-claude plugin add github.com/mbwsims/alignkit-plugin
+claude plugin add mbwsims/alignkit-plugin
 ```
 
 ## What you get
 
 - **`/discover`** — Reverse-engineer conventions from your codebase. Reads your code, finds patterns, and generates paste-ready rules with evidence.
-- **`/lint`** — Deep instruction quality analysis: vague rules, conflicts, effectiveness ratings, coverage gaps, consolidation suggestions, placement advice.
-- **`/check`** — Conformance report: does your codebase actually follow your rules? Checks each rule against the code with specific evidence.
+- **`/lint-rules`** — Deep instruction quality analysis: vague rules, conflicts, effectiveness ratings, coverage gaps, consolidation suggestions, placement advice.
+- **`/check-rules`** — Conformance report: does your codebase actually follow your rules? Checks each rule against the code with specific evidence.
 - **Auto-lint hook** — Surfaces quality issues automatically when you edit CLAUDE.md or `.claude/rules/`.
 - **instruction-advisor agent** — Full autonomous review combining all of the above.
 
@@ -44,9 +46,9 @@ Add rules: [1] [2] [3] [all] — or specify which to add
 ```
 /discover  →  find unwritten conventions in your code
     ↓
-/lint      →  check the quality of your rules
+/lint-rules      →  check the quality of your rules
     ↓
-/check     →  verify the codebase follows them
+/check-rules     →  verify the codebase follows them
     ↓
 /discover  →  find more as the project evolves
 ```
@@ -59,13 +61,13 @@ For tracking rule adherence *across sessions over time*, install the [alignkit](
 npm install -g alignkit
 ```
 
-This upgrades `/check` from a point-in-time conformance check to persistent adherence tracking:
+This upgrades `/check-rules` from a point-in-time conformance check to persistent adherence tracking:
 
 | | Without alignkit | With alignkit |
 |---|---|---|
 | `/discover` | Full convention discovery | Same |
-| `/lint` | Full analysis via Claude's reasoning | Enhanced with precise token counts and 10 static analyzers |
-| `/check` | Conformance check (does code match rules *now*?) | Adherence tracking (did Claude follow rules *across sessions*?) |
+| `/lint-rules` | Full analysis via Claude's reasoning | Enhanced with precise token counts and 10 static analyzers |
+| `/check-rules` | Conformance check (does code match rules *now*?) | Adherence tracking (did Claude follow rules *across sessions*?) |
 | Trend data | No | Yes — tracks adherence over time |
 
 The plugin works out of the box. Install alignkit when you're ready to track adherence across sessions.
@@ -75,8 +77,8 @@ The plugin works out of the box. Install alignkit when you're ready to track adh
 | Component | Type | Purpose |
 |-----------|------|---------|
 | `/discover` | Skill | Reverse-engineer conventions from codebase into rules |
-| `/lint` | Skill | Instruction quality analysis with effectiveness ratings |
-| `/check` | Skill | Rule conformance/adherence checking with evidence |
+| `/lint-rules` | Skill | Instruction quality analysis with effectiveness ratings |
+| `/check-rules` | Skill | Rule conformance/adherence checking with evidence |
 | Auto-lint | Hook | Surfaces issues on instruction file edits |
 | instruction-advisor | Agent | Comprehensive discover + lint + check review |
 

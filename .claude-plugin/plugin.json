@@ -1,7 +1,7 @@
 {
   "name": "alignkit",
-  "version": "0.1.0",
-  "description": "Instruction intelligence for Claude Code — discover conventions, lint rules, and verify conformance.",
+  "version": "0.2.0",
+  "description": "Instruction intelligence for Claude Code — discover conventions, lint instruction quality, and verify codebase conformance. 3 commands, 1 agent, 2 MCP servers.",
   "author": {
     "name": "Matt Sims",
     "url": "https://github.com/mbwsims"
@@ -10,10 +10,12 @@
   "repository": "https://github.com/mbwsims/alignkit-plugin",
   "license": "MIT",
   "keywords": [
+    "alignkit",
     "claude-md",
     "instruction-quality",
     "adherence",
     "lint",
-    "rules"
+    "rules",
+    "conformance"
   ]
 }

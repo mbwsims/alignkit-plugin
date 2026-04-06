@@ -212,6 +212,167 @@ stack.
 - "src/shared/ is imported by all features — features never import from each other"
 - "Each package has index.ts that defines its public API — no deep imports"
 
+---
+
+## Language-Specific Categories
+
+The categories above apply broadly. The sections below add language-specific patterns
+that don't map to the general categories. Skip sections for languages not present in
+the project.
+
+### Python
+
+**Import Organization:**
+- Absolute vs relative imports (`from mypackage.utils import X` vs `from .utils import X`)
+- Import grouping (stdlib → third-party → local, enforced by isort/ruff)
+- Star imports (`from module import *`) — presence or absence
+- `__init__.py` usage: re-exports vs empty vs package initialization
+
+**How to detect:**
+- Grep for `from . import` (relative) vs `from mypackage import` (absolute)
+- Check for `.isort.cfg`, `pyproject.toml [tool.isort]`, or `ruff.toml`
+- Count `import *` occurrences
+
+**Type Annotations:**
+- Type hint coverage (all functions, only public APIs, or none)
+- `from __future__ import annotations` usage
+- Runtime type checking (pydantic, attrs, dataclasses) vs static-only (mypy)
+- `Optional[X]` vs `X | None` style (Python 3.10+)
+
+**How to detect:**
+- Grep for `def .+\(.*:` (typed params) vs `def .+\([^:]+\)` (untyped)
+- Check for `mypy.ini`, `pyproject.toml [tool.mypy]`
+- Grep for `from pydantic import`, `@dataclass`, `import attrs`
+
+**Decorator Patterns:**
+- Auth decorators on views (`@login_required`, `@permission_required`)
+- Caching decorators (`@cache`, `@lru_cache`)
+- Route decorators (`@app.route`, `@router.get`)
+- Custom decorator conventions
+
+**How to detect:**
+- Grep for `@` at start of line, aggregate decorator names
+- Look for consistent decorator ordering on functions
+
+**Project Structure:**
+- Package layout (`src/` layout vs flat)
+- Test organization (`tests/` mirror vs `test_*.py` co-located)
+- Configuration approach (pyproject.toml vs setup.cfg vs setup.py)
+- Virtual environment (poetry, pipenv, uv, venv)
+
+**Example discoveries:**
+- "All 23 functions have type annotations — consistent typing throughout"
+- "Every view function decorated with @require_auth before @require_permission"
+- "Tests mirror src/ structure: src/services/user.py → tests/services/test_user.py"
+- "Pydantic models for all API request/response schemas — no raw dicts"
+
+### Go
+
+**Error Handling:**
+- `if err != nil` patterns (return early vs wrap vs log)
+- Error wrapping (`fmt.Errorf("context: %w", err)` vs bare returns)
+- Custom error types vs sentinel errors vs string matching
+- Error variable naming (`err` vs descriptive names)
+
+**How to detect:**
+- Grep for `if err != nil` and observe the block body
+- Grep for `%w` in Errorf calls (wrapping) vs `%v` or `%s` (losing context)
+- Grep for `errors.New`, `errors.Is`, `errors.As`
+- Look for files defining custom error types
+
+**Interface Patterns:**
+- Interface size (small, 1-3 methods vs large)
+- Interface location (consumer package vs provider package)
+- Naming conventions (`Reader`, `Writer`, `Storer` vs `IReader`, `ReaderInterface`)
+- Embedding patterns
+
+**How to detect:**
+- Grep for `type .+ interface` and count methods per interface
+- Check where interfaces are defined vs where they're implemented
+- Look for interface embedding (`io.Reader`, etc.)
+
+**Package Organization:**
+- Package naming (single word, no underscores)
+- Internal packages (`internal/`) for encapsulation
+- `cmd/` for entry points
+- Flat vs nested package hierarchy
+
+**How to detect:**
+- List directories and observe naming patterns
+- Check for `internal/` directory and what it contains
+- Count packages and nesting depth
+
+**Concurrency Patterns:**
+- Channel usage vs sync primitives (Mutex, WaitGroup)
+- Context propagation (context.Context as first parameter)
+- Goroutine lifecycle management (errgroup, worker pools)
+
+**How to detect:**
+- Grep for `go func`, `make(chan`, `sync.Mutex`, `sync.WaitGroup`
+- Grep for `context.Context` in function signatures — check if it's always first param
+- Grep for `errgroup` imports
+
+**Example discoveries:**
+- "All errors wrapped with fmt.Errorf and %w — consistent error chain"
+- "Interfaces defined in consumer packages, max 2 methods each"
+- "context.Context is always the first parameter — 47/47 functions"
+- "All HTTP handlers follow func(w http.ResponseWriter, r *http.Request) signature"
+
+### Rust
+
+**Error Handling:**
+- Result/Option usage patterns
+- Custom error enums vs anyhow/thiserror
+- `?` operator usage (early return vs explicit match)
+- Error conversion patterns (From trait implementations)
+
+**How to detect:**
+- Grep for `-> Result<` to find functions that return Results
+- Check Cargo.toml for `anyhow`, `thiserror`, `eyre`
+- Grep for `impl From<` for error conversion patterns
+- Count `unwrap()` and `expect()` calls (high counts suggest weak error handling)
+
+**Ownership & Borrowing Patterns:**
+- Function signatures: `&self` vs `&mut self` vs `self` (consuming) conventions
+- String handling: `&str` vs `String` in function parameters
+- Clone usage patterns (sparing vs liberal)
+- Lifetime annotation conventions
+
+**How to detect:**
+- Grep for `fn .+\(self` vs `fn .+\(&self` vs `fn .+\(&mut self`
+- Grep for `.clone()` calls and frequency
+- Look for explicit lifetime annotations `<'a>`
+
+**Module Organization:**
+- `mod.rs` vs file-as-module pattern
+- Re-exports in `lib.rs`
+- Visibility modifiers (`pub`, `pub(crate)`, `pub(super)`)
+- Feature flag organization
+
+**How to detect:**
+- Check for `mod.rs` files vs directory/file modules
+- Grep for `pub(crate)` vs bare `pub`
+- Check Cargo.toml `[features]` section
+
+**Trait Patterns:**
+- Trait design (small, composable traits vs large interfaces)
+- Derive macro usage (`#[derive(Debug, Clone, PartialEq)]`)
+- Default implementations
+- Trait bounds in generics
+
+**How to detect:**
+- Grep for `trait ` definitions and count methods
+- Grep for `#[derive(` and list commonly derived traits
+- Look for `impl Default for` patterns
+
+**Example discoveries:**
+- "All error types use thiserror — zero manual Display implementations"
+- "pub(crate) used consistently for internal APIs — only lib.rs re-exports are pub"
+- "Every struct derives Debug, Clone, Serialize, Deserialize — consistent 4-derive pattern"
+- "All functions take &str not String for string parameters"
+
+---
+
 ## Analysis Tips
 
 **Sampling strategy:**
@@ -220,13 +381,30 @@ stack.
 - Include both recent and older files (check git dates)
 - Prioritize files with the most imports (likely central/important)
 
-**Threshold for reporting:**
-- 90%+ consistency → Strong convention, high-confidence rule
-- 70-89% consistency → Likely convention with exceptions, note the exceptions
-- Below 70% → Not a convention, don't report it
+**Threshold for reporting (tiered approach):**
+- **90%+ consistency**: Strong convention, high-confidence rule. Include with full confidence
+  and note the exact percentage (e.g., "12/12 files" or "34/36 files").
+- **70-89% consistency**: Likely convention with exceptions. Include but explicitly list the
+  exceptions found. Assess whether exceptions are intentional (e.g., framework-required
+  deviations) or accidental (e.g., older code predating the convention).
+- **Below 70%**: Not a convention -- do not report it. If the pattern seems important but
+  falls below 70%, note it as an observation without a suggested rule.
 
 **What NOT to report:**
-- Framework-imposed patterns (Next.js routing structure is not a "convention")
+- Framework-imposed patterns (Next.js routing structure, Rails directory layout)
 - Obvious language features (using TypeScript interfaces in a TypeScript project)
-- Single-instance patterns (one file does something unique — not a convention)
+- Single-instance patterns (one file does something unique -- not a convention)
 - Patterns already documented in CLAUDE.md or .claude/rules/
+- Implementation details masquerading as conventions (e.g., "SSE uses TextEncoder" describes
+  how something was built, not a rule to follow)
+- Absence-as-convention (e.g., "no Zod for API inputs" might be a gap, not a convention)
+
+**Monorepo / multi-language projects:**
+- Analyze each package or language separately -- a convention in `packages/api/` may not
+  apply to `packages/web/`.
+- When a convention exists across multiple packages, note it as a project-wide convention
+  with the packages it spans.
+- For multi-language projects, categorize conventions by language. A Python naming convention
+  does not apply to TypeScript files and vice versa.
+- Check for cross-package conventions: shared config files, workspace-level scripts, or
+  import boundaries between packages.
